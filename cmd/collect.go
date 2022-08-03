@@ -8,7 +8,7 @@ import (
 	"log"
 	"os"
 	"path/filepath"
-	"strings"
+	"regexp"
 
 	"github.com/spf13/cobra"
 )
@@ -45,7 +45,9 @@ func traverse(path string, info os.FileInfo, err error) error {
 		return nil
 	}
 
-	if strings.Contains(path, ".ja") {
+	r := regexp.MustCompile(`.*ja$`)
+
+	if r.Match([]byte(path)) {
 		fileContent, err := os.ReadFile(path)
 		handleErr(err)
 		f, err := os.OpenFile(OutFileName, os.O_APPEND|os.O_WRONLY, 0644)
