@@ -5,7 +5,6 @@ package cmd
 
 import (
 	"fmt"
-	"io/ioutil"
 	"log"
 	"os"
 	"path/filepath"
@@ -47,7 +46,7 @@ func traverse(path string, info os.FileInfo, err error) error {
 	}
 
 	if strings.Contains(path, ".ja") {
-		fileContent, err := ioutil.ReadFile(path)
+		fileContent, err := os.ReadFile(path)
 		handleErr(err)
 		f, err := os.OpenFile(OutFileName, os.O_APPEND|os.O_WRONLY, 0644)
 		handleErr(err)
