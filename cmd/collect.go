@@ -45,15 +45,15 @@ func traverse(path string, info os.FileInfo, err error) error {
 		return nil
 	}
 
-	r := regexp.MustCompile(`[\s\S]*ja$`)
+	r := regexp.MustCompile(`[\s\S]*ja.txt$`)
 
 	if r.Match([]byte(path)) {
 		fileContent, err := os.ReadFile(path)
 		handleErr(err)
 		f, err := os.OpenFile(OutFileName, os.O_APPEND|os.O_WRONLY, 0644)
 		handleErr(err)
-		// contentBlock := fmt.Sprintf("%s%s", string(fileContent), "\n")
-		_, err = fmt.Fprintln(f, string(fileContent))
+		contentBlock := fmt.Sprintf("%s%s", string(fileContent), "\n")
+		_, err = fmt.Fprintln(f, contentBlock)
 		handleErr(err)
 	}
 	return nil
