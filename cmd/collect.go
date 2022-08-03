@@ -5,12 +5,16 @@ package cmd
 
 import (
 	"fmt"
+	"io/ioutil"
 	"log"
 	"os"
 	"path/filepath"
+	"strings"
 
 	"github.com/spf13/cobra"
 )
+
+const OutFileName = "subtitle.txt"
 
 // collectCmd represents the collect command
 var collectCmd = &cobra.Command{
@@ -26,6 +30,11 @@ to quickly create a Cobra application.`,
 }
 
 func collect(cmd *cobra.Command, args []string) {
+	if outFileNotExist() {
+		file, err := os.Create(OutFileName)
+		handleErr(err)
+		defer file.Close()
+	}
 	if err := filepath.Walk(currentDir(), traverse); err != nil {
 		handleErr(err)
 	}
@@ -37,9 +46,22 @@ func traverse(path string, info os.FileInfo, err error) error {
 		return nil
 	}
 
-	// Read file order by asc and write that file content to another file.
-	fmt.Printf("file : %s\n", path)
+	if strings.Contains(path, ".ja") {
+		fileContent, err := ioutil.ReadFile(path)
+		handleErr(err)
+		f, err := os.OpenFile(OutFileName, os.O_APPEND|os.O_WRONLY, 0644)
+		handleErr(err)
+		// contentBlock := fmt.Sprintf("%s%s", string(fileContent), "\n")
+		_, err = fmt.Fprintln(f, string(fileContent))
+		handleErr(err)
+	}
 	return nil
+}
+
+func outFileNotExist() bool {
+	outFilePath := fmt.Sprintf("%s%s", currentDir(), OutFileName)
+	_, err := os.Stat(outFilePath)
+	return os.IsNotExist(err)
 }
 
 func currentDir() string {
