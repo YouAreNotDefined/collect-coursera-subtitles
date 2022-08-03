@@ -41,11 +41,11 @@ func collect(cmd *cobra.Command, args []string) {
 
 func traverse(path string, info os.FileInfo, err error) error {
 	if info.IsDir() {
-		fmt.Printf(" dir : %s\n", path)
+		fmt.Printf("dir : %s\n", path)
 		return nil
 	}
 
-	r := regexp.MustCompile(`.*ja$`)
+	r := regexp.MustCompile(`[\s\S]*ja$`)
 
 	if r.Match([]byte(path)) {
 		fileContent, err := os.ReadFile(path)
