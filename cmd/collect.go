@@ -52,7 +52,7 @@ func traverse(path string, info os.FileInfo, err error) error {
 		handleErr(err)
 		f, err := os.OpenFile(OutFileName, os.O_APPEND|os.O_WRONLY, 0644)
 		handleErr(err)
-		contentBlock := fmt.Sprintf("%s%s", string(fileContent), "\n")
+		contentBlock := fmt.Sprintf("%s\n", string(fileContent))
 		_, err = fmt.Fprintln(f, contentBlock)
 		handleErr(err)
 	}
